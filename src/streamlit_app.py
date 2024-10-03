@@ -1,3 +1,4 @@
+<<<<<<< HEAD:streamlit_app.py
 import streamlit as st
 import requests
 import plotly.graph_objects as go
@@ -31,3 +32,21 @@ if response.status_code == 200:
 
 else:
     st.error('Error: Could not connect to the Flask API')
+=======
+import streamlit as st
+import requests
+
+st.title('Streamlit Frontend for Flask API')
+
+api_url = 'http://localhost:5000/api/data'
+response = requests.get(api_url)
+
+if response.status_code == 200:
+    data = response.json()
+    st.write('Message from Flask API:')
+    st.write(data['message'])
+    st.write('Data from Flask API:')
+    st.write(data['data'])
+else:
+    st.write('Error: Could not connect to the Flask API')
+>>>>>>> 7adbcc82dbf6f2ede482f5e7f0c9904dd0a6bd58:src/streamlit_app.py
