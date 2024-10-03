@@ -34,7 +34,7 @@ def get_data():
             'company_description': company_description,
             'revenue_per_share': revenue_per_share,
             'net_income_per_share': net_income_per_share,
-            'free_cash_flow_per_share': free_cash_flow_per_share
+            'free_cash_flow_per_share': free_cash_flow_per_share,
         }
     except Exception as e:
         data = {
