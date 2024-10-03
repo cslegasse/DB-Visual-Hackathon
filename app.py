@@ -1,43 +1,50 @@
-from flask import Flask, jsonify, request
-import yfinance as yf
+import streamlit as st
+import requests
+import plotly.graph_objects as go
 
-app = Flask(__name__)
+st.title('Financial Data Dashboard')
 
-@app.route('/api/data', methods=['GET'])
-def get_data():
-    ticker_symbol = request.args.get('ticker', 'AAPL') 
-    ticker = yf.Ticker(ticker_symbol)
-    
-    quarterly_financials = ticker.quarterly_financials
-    quarterly_cashflow = ticker.quarterly_cashflow
-    balance_sheet = ticker.quarterly_balance_sheet
-    shares_outstanding = ticker.info.get('sharesOutstanding', 1) 
-    
-    revenue = quarterly_financials.loc['Total Revenue'] if 'Total Revenue' in quarterly_financials.index else 0
-    net_income = quarterly_financials.loc['Net Income'] if 'Net Income' in quarterly_financials.index else 0
-    free_cash_flow = quarterly_cashflow.loc['Free Cash Flow'] if 'Free Cash Flow' in quarterly_cashflow.index else 0
-    
-    goodwill = balance_sheet.loc['Goodwill'] if 'Goodwill' in balance_sheet.index else 0
-    other_intangible_assets = balance_sheet.loc['Other Intangible Assets'] if 'Other Intangible Assets' in balance_sheet.index else 0
-    total_assets = balance_sheet.loc['Total Assets'] if 'Total Assets' in balance_sheet.index else 0
-    total_liabilities = balance_sheet.loc['Total Liabilities'] if 'Total Liabilities' in balance_sheet.index else 0
-    
-    tangible_book_value = total_assets - goodwill - other_intangible_assets - total_liabilities
-    
-    revenue_per_share = revenue / shares_outstanding
-    net_income_per_share = net_income / shares_outstanding
-    free_cash_flow_per_share = free_cash_flow / shares_outstanding
-    tangible_book_value_per_share = tangible_book_value / shares_outstanding
-    
-    data = {
-        'ticker': ticker_symbol,
-        'revenue_per_share': revenue_per_share.tolist(),
-        'net_income_per_share': net_income_per_share.tolist(),
-        'free_cash_flow_per_share': free_cash_flow_per_share.tolist(),
-        'tangible_book_value_per_share': tangible_book_value_per_share.tolist()
-    }
-    
-    return jsonify(data)
+st.sidebar.header('User Input')
+ticker = st.sidebar.text_input('Enter a Stock Ticker:', 'AAPL')
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+api_url = f'http://localhost:5000/api/data?ticker={ticker}'
+
+response = requests.get(api_url)
+
+if response.status_code == 200:
+    data = response.json()
+    st.write(f"**Showing data for: {data['ticker']}**")
+    
+    print(data)  
+
+    def get_value(key):
+        value = data.get(key, [0])  
+        if isinstance(value, list):
+            return float(value[0]) if len(value) > 0 else 0
+        return float(value)
+
+    revenue_per_share = get_value('revenue_per_share')
+    net_income_per_share = get_value('net_income_per_share')
+    free_cash_flow_per_share = get_value('free_cash_flow_per_share')
+    tangible_book_value_per_share = get_value('tangible_book_value_per_share')
+
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric(label="Revenue Per Share", value=revenue_per_share)
+    with col2:
+        st.metric(label="Net Income Per Share", value=net_income_per_share)
+    with col3:
+        st.metric(label="Free Cash Flow Per Share", value=free_cash_flow_per_share)
+    with col4:
+        st.metric(label="Tangible Book Value Per Share", value=tangible_book_value_per_share)
+
+    metrics = ['Revenue Per Share', 'Net Income Per Share', 'Free Cash Flow Per Share', 'Tangible Book Value Per Share']
+    values = [revenue_per_share, net_income_per_share, free_cash_flow_per_share, tangible_book_value_per_share]
+
+    fig = go.Figure(data=[go.Bar(x=metrics, y=values, text=values, textposition='auto')])
+    fig.update_layout(title=f'Financial Overview for {ticker}', yaxis_title='Per Share Values')
+
+    st.plotly_chart(fig)
+
+else:
+    st.error('Error: Could not connect to the Flask API')
