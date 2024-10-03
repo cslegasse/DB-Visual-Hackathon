@@ -39,10 +39,13 @@ import requests
 st.title('Streamlit Frontend for Flask API')
 
 api_url = 'http://localhost:5000/api/data'
-response = requests.get(api_url)
 
-if response.status_code == 200:
+try:
+    response = requests.get(api_url, timeout=5)
+    response.raise_for_status()  # Raises an HTTPError for bad responses
+
     data = response.json()
+    st.success('Successfully connected to Flask API')
     st.write('Message from Flask API:')
     st.write(data['message'])
     st.write('Data from Flask API:')
