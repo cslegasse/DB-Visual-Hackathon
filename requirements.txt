@@ -1,1 +1,7 @@
 streamlit
+flask
+yfinance
+cors
+plotly
+pytest
+flake8

@@ -1,5 +1,6 @@
 import yfinance as yf
 
+def get_ticker_data(ticker_symbol):
 # Prompt the user for the ticker symbol
 ticker_symbol = input("Enter the ticker symbol (e.g., AAPL for Apple): ")
 
