@@ -81,6 +81,58 @@ The objective of this hackathon is to create at minimum a proof of concept (POC)
 - Implement security scanning for vulnerabilities
 - Set up automatic deployment to staging/production environments
 
+## CI/CD Pipeline
+
+We use GitHub Actions to implement our CI/CD pipeline. This automates our build, test, and deployment processes, ensuring code quality and faster development cycles.
+
+### Workflow Overview
+
+Our CI/CD pipeline consists of the following steps:
+
+1. **Build and Test**: Triggered on every push and pull request to the `main` branch.
+   - Sets up the Python environment
+   - Installs dependencies
+   - Runs unit tests
+   - Performs linting
+
+2. **Deploy**: Triggered only on pushes to the `main` branch after successful build and test.
+   - Deploys the application to our production environment
+
+### Setting Up GitHub Actions
+
+To contribute to this project and work with our CI/CD pipeline:
+
+1. Fork the repository
+2. Clone your forked repository locally
+3. Create a new branch for your feature or bug fix
+4. Make your changes and commit them
+5. Push your branch to your fork
+6. Create a pull request to the main repository
+
+The CI/CD pipeline will automatically run on your pull request, checking for any issues before merging.
+
+### Automatic Pull Requests
+
+To streamline our workflow, we encourage the use of automatic pull requests. Here's how to set it up:
+
+1. Install the [GitHub CLI](https://cli.github.com/) tool
+2. Authenticate with your GitHub account: `gh auth login`
+3. Use the following command to create a pull request automatically:
+
+   ```bash
+   gh pr create --base main --head your-branch-name --title "Your PR Title" --body "Description of your changes"
+   ```
+
+This command will create a pull request from your current branch to the `main` branch of the original repository.
+
+### Best Practices for Working with CI/CD
+
+- Always create a new branch for your work
+- Keep your branches up to date with the main repository
+- Write meaningful commit messages
+- Ensure all tests pass locally before pushing
+- Address any issues flagged by the CI/CD pipeline promptly
+
 ## Contributing:
 
 - Fork the repository and create a new branch for your feature or bug fix
