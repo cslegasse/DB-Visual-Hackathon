@@ -1,6 +1,6 @@
+#Here is where you can test the company ticker and see the relevant data. 
 import yfinance as yf
 
-def get_ticker_data(ticker_symbol):
 # Prompt the user for the ticker symbol
 ticker_symbol = input("Enter the ticker symbol (e.g., AAPL for Apple): ")
 
@@ -53,4 +53,3 @@ print(free_cash_flow_per_share)
 
 print("\nTangible Book Value Per Share:")
 print(tangible_book_value_per_share)
-
