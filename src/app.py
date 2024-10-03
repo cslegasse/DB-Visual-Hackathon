@@ -1,4 +1,3 @@
-# app.py (Flask API)
 from flask import Flask, jsonify, request
 import yfinance as yf
 
@@ -6,14 +5,14 @@ app = Flask(__name__)
 
 @app.route('/api/data', methods=['GET'])
 def get_data():
-    ticker_symbol = request.args.get('ticker', 'AAPL')  # Get ticker from request, default is 'AAPL'
+    ticker_symbol = request.args.get('ticker', 'AAPL')  
     ticker = yf.Ticker(ticker_symbol)
     
     # Fetch financial data
     quarterly_financials = ticker.quarterly_financials
     quarterly_cashflow = ticker.quarterly_cashflow
     balance_sheet = ticker.quarterly_balance_sheet
-    shares_outstanding = ticker.info.get('sharesOutstanding', 1)  # Avoid division by 0
+    shares_outstanding = ticker.info.get('sharesOutstanding', 1)  
     
     # Revenue and Net Income
     revenue = quarterly_financials.loc['Total Revenue'] if 'Total Revenue' in quarterly_financials.index else 0
