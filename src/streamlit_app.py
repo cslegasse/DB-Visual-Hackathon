@@ -9,13 +9,12 @@ ticker = st.sidebar.text_input('Enter a Stock Ticker:', 'AAPL')
 
 api_url = f'http://localhost:5000/api/data?ticker={ticker}'
 
-response = requests.get(api_url)
+try:
+    response = requests.get(api_url)
+    response.raise_for_status()  # Raises an HTTPError for bad responses
 
-if response.status_code == 200:
     data = response.json()
     st.write(f"**Showing data for: {data['ticker']}**")
-    
-    print(data)  
 
     def get_value(key):
         value = data.get(key, [0])  
@@ -48,5 +47,5 @@ if response.status_code == 200:
 
     st.plotly_chart(fig)
 
-else:
-    st.error('Error: Could not connect to the Flask API')
+except requests.exceptions.RequestException as e:
+    st.error(f'Error: {e}')
