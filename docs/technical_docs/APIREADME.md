@@ -1,17 +1,24 @@
-Joshua Oyediran 
+Financial Data Retriever
 
-Financial Overview
+Overview
 
-Overview: 
-This Python Script takes in a ticker symbol from the user and displays the relevant financial data from the api. This information is displayed on a quarterly basis using past historical data. All ticker symbols are IPO companies or publically traded companies within the current financial markets updated to 2024. 
+This Python script retrieves and displays key financial metrics for publicly traded companies using the Yahoo Finance API through the yfinance library. Users can input a specific ticker symbol, and the script will output quarterly financial data including:
 
-Ex. AAPL, Revenue Per Share, Net Income Per Share, Free Cashflow Per Share, and Tangible Book Value Per Share. 
+Revenue Per Share
+Net Income Per Share
+Free Cash Flow Per Share
+Tangible Book Value Per Share
 
-Features: 
 
-- User friendly ticker symbols
-- Fetches quarterly financial data from the api including, Net Income Per Share, Revenue Per Share, Free Cashflow Per Share, and Tangible Book Value, Per Share. 
-- Managees the data and displays it in a visually appealing way. 
-- Displays key financial metrics per share for the publicly traded company. 
+Features
 
-Pre Requis
+User-friendly input for ticker symbols.
+Fetches quarterly financial data, including income statements and cash flow metrics.
+Handles missing data gracefully, ensuring the script runs smoothly even if certain financial metrics are unavailable.
+Outputs key financial metrics per share for the specified company.
+
+
+Prerequisites
+
+Python 3.x
+yfinance library
