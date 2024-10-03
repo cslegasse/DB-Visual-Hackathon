@@ -12,6 +12,11 @@ quarterly_financials = ticker.quarterly_financials
 quarterly_cashflow = ticker.quarterly_cashflow
 balance_sheet = ticker.quarterly_balance_sheet
 
+# Get company name, IPO date, and mission statement
+company_name = ticker.info.get('longName', 'N/A')  # Default to 'N/A' if not found
+ipo_date = ticker.info.get('ipoDate', 'N/A')  # Default to 'N/A' if not found
+mission_statement = ticker.info.get('longBusinessSummary', 'N/A')  # Default to 'N/A' if not found
+
 # Get the number of shares outstanding
 shares_outstanding = ticker.info.get('sharesOutstanding', 0)  # Default to 0 if not found
 
@@ -40,8 +45,12 @@ net_income_per_share = net_income / shares_outstanding if shares_outstanding > 0
 free_cash_flow_per_share = free_cash_flow / shares_outstanding if shares_outstanding > 0 else 0
 tangible_book_value_per_share = tangible_book_value / shares_outstanding if shares_outstanding > 0 else 0
 
+ 
 # Display the calculated per share values
-print(f"\nFinancial Data for {ticker_symbol} (Quarterly):")
+print(f"\nFinancial Data for {company_name}({ticker_symbol}):")
+print(f"IPO Date: {ipo_date}/n")
+print(f"Mission Statement: {mission_statement}/n")
+print("Quarterly Financial Metrics")
 print("Revenue Per Share:")
 print(revenue_per_share)
 
