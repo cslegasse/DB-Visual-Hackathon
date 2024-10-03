@@ -2,22 +2,30 @@ import streamlit as st
 import requests
 import plotly.graph_objects as go
 
+# Title of the Dashboard
 st.title('Financial Data Dashboard')
 
+# Sidebar for ticker input
 st.sidebar.header('User Input')
 ticker = st.sidebar.text_input('Enter a Stock Ticker:', 'AAPL')
 
+# API URL for the Flask backend
 api_url = f'http://localhost:5000/api/data?ticker={ticker}'
 
-try:
-    response = requests.get(api_url)
-    response.raise_for_status()  # Raises an HTTPError for bad responses
+# Fetch data from the Flask API
+response = requests.get(api_url)
 
+# Check if API request is successful
+if response.status_code == 200:
     data = response.json()
     st.write(f"**Showing data for: {data['ticker']}**")
+    
+    # Debugging: check the structure of the API response
+    print(data)  # Remove this line in production
 
+    # Access values safely
     def get_value(key):
-        value = data.get(key, [0])  
+        value = data.get(key, [0])  # Default to a list with a single zero
         if isinstance(value, list):
             return float(value[0]) if len(value) > 0 else 0
         return float(value)
@@ -47,5 +55,5 @@ try:
 
     st.plotly_chart(fig)
 
-except requests.exceptions.RequestException as e:
-    st.error(f'Error: {e}')
+else:
+    st.error('Error: Could not connect to the Flask API')
