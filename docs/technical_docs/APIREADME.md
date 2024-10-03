@@ -9,7 +9,6 @@ Net Income Per Share
 Free Cash Flow Per Share
 Tangible Book Value Per Share
 
-
 Features
 
 User-friendly input for ticker symbols.

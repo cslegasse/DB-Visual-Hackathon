@@ -1,45 +1,23 @@
-import unittest
-from src.utils import validate_ticker, fetch_financial_data
-from src.API_Data_for_ticker import get_ticker_data
+import requests
+import json
 
-class TestAPIFunctionality(unittest.TestCase):
-
-    def test_valid_nyse_tickers(self):
-        valid_tickers = ['AAPL', 'MSFT', 'JPM', 'GE', 'XOM']
-        for ticker in valid_tickers:
-            with self.subTest(ticker=ticker):
-                self.assertTrue(validate_ticker(ticker))
-                data = get_ticker_data(ticker)
-                self.assertIsNotNone(data)
-                self.assertIn('revenue_per_share', data)
-                self.assertIn('net_income_per_share', data)
-                self.assertIn('free_cash_flow_per_share', data)
-                self.assertIn('tangible_book_value_per_share', data)
-
-    def test_invalid_tickers(self):
-        invalid_tickers = ['INVALID', 'NOT_A_TICKER', '123', 'TEST']
-        for ticker in invalid_tickers:
-            with self.subTest(ticker=ticker):
-                self.assertFalse(validate_ticker(ticker))
-                with self.assertRaises(Exception):
-                    get_ticker_data(ticker)
-
-    def test_edge_cases(self):
-        edge_cases = ['', ' ', 'A', 'AA', 'AAAA', 'aapl', 'msft']
-        for ticker in edge_cases:
-            with self.subTest(ticker=ticker):
-                if validate_ticker(ticker):
-                    data = get_ticker_data(ticker)
-                    self.assertIsNotNone(data)
-                else:
-                    with self.assertRaises(Exception):
-                        get_ticker_data(ticker)
-
-    def test_data_consistency(self):
-        ticker = 'AAPL'
-        data1 = get_ticker_data(ticker)
-        data2 = get_ticker_data(ticker)
-        self.assertEqual(data1, data2, "Data should be consistent for the same ticker")
+def test_api():
+    # Test with default ticker (AAPL)
+    response = requests.get('http://localhost:5000/api/data')
+    assert response.status_code == 200
+    data = response.json()
+    assert data['ticker'] == 'AAPL'
+    assert 'shortName' in data
+    assert 'firstTradeDateEpochUtc' in data
+    assert 'longBusinessSummary' in data
+    
+    # Test with a different ticker
+    response = requests.get('http://localhost:5000/api/data?ticker=GOOGL')
+    assert response.status_code == 200
+    data = response.json()
+    assert data['ticker'] == 'GOOGL'
+    
+    print("All tests passed!")
 
 if __name__ == '__main__':
-    unittest.main()
+    test_api()

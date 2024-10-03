@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 import yfinance as yf
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -12,6 +13,8 @@ def get_data():
     quarterly_financials = ticker.quarterly_financials
     quarterly_cashflow = ticker.quarterly_cashflow
     balance_sheet = ticker.quarterly_balance_sheet
+
+    # Fetch shares outstanding
     shares_outstanding = ticker.info.get('sharesOutstanding', 1)  
     
     # Revenue and Net Income
@@ -35,11 +38,14 @@ def get_data():
     tangible_book_value_per_share = tangible_book_value / shares_outstanding
     
     data = {
-        'ticker': ticker_symbol,
-        'revenue_per_share': revenue_per_share.tolist(),
-        'net_income_per_share': net_income_per_share.tolist(),
-        'free_cash_flow_per_share': free_cash_flow_per_share.tolist(),
-        'tangible_book_value_per_share': tangible_book_value_per_share.tolist()
+    'longName': ticker.info.get('longName', 'N/A'),
+    'firstTradeDateEpochUtc': ticker.info.get('firstTradeDateEpochUtc', 'N/A'),
+    'longBusinessSummary': ticker.info.get('longBusinessSummary', 'N/A'),
+    'ticker': ticker_symbol,
+    'revenue_per_share': revenue_per_share.tolist(),
+    'net_income_per_share': net_income_per_share.tolist(),
+    'free_cash_flow_per_share': free_cash_flow_per_share.tolist(),
+    'tangible_book_value_per_share': tangible_book_value_per_share.tolist()
     }
     
     return jsonify(data)

@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import plotly.graph_objects as go
+from datetime import datetime
 
 st.title('Financial Data Dashboard')
 
@@ -14,7 +15,6 @@ response = requests.get(api_url)
 if response.status_code == 200:
     data = response.json()
     st.write(f"**Showing data for: {data['ticker']}**")
-    
 
     # Access values safely
     def get_value(key):
@@ -22,13 +22,19 @@ if response.status_code == 200:
         if isinstance(value, list):
             return float(value[0]) if len(value) > 0 else 0
         return float(value)
-
+    
     revenue_per_share = round(get_value('revenue_per_share'),2)
     net_income_per_share = round(get_value('net_income_per_share'),2)
     free_cash_flow_per_share = round(get_value('free_cash_flow_per_share'),2)
     tangible_book_value_per_share = round(get_value('tangible_book_value_per_share'),2)
 
-  
+
+    # TODO: Debug why the data is not showing up
+    st.sidebar.subheader('Company Information')
+    st.sidebar.write(f"**Company Name: {data.get('longName', 'N/A')}**")
+    st.sidebar.write(f"**IPO Date: {datetime.utcfromtimestamp(data.get('firstTradeDateEpochUtc', 0)).strftime('%Y-%m-%d')}**")
+    st.sidebar.write(f"**Mission Statement: {data.get('longBusinessSummary', 'N/A')}**")
+
 
     # Create a Plotly bar chart
     metrics = {

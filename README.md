@@ -36,6 +36,9 @@ Quarterly financial data on publicly traded companies can take a long time to ma
   6. Free Cash Flow Per Share
   7. Tangible Book Value Per Share
 
+## Future additions
+   1. SQL backend for data persistance to not have to submit another request for the same ticker
+
 ## Instructions
 
 The objective of this hackathon is to create at minimum a proof of concept (POC), or at best a working Minimum Viable Product (MVP) for your team's selected prompt. Teams can utilize datasets from any open-source platform with the challenge to present a detailed outline of your concept or testable model aligning to your chosen prompt.
