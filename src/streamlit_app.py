@@ -29,11 +29,11 @@ if response.status_code == 200:
     tangible_book_value_per_share = round(get_value('tangible_book_value_per_share'),2)
 
 
-    # TODO: Debug why the data is not showing up
+# TODO: Debug why the data is not showing up
     st.sidebar.subheader('Company Information')
-    st.sidebar.write(f"**Company Name: {data.get('longName', 'N/A')}**")
+    st.sidebar.write(f"**Company Name: {data.get('longName', 'Lorem ipsum dolor.')}**")
     st.sidebar.write(f"**IPO Date: {datetime.utcfromtimestamp(data.get('firstTradeDateEpochUtc', 0)).strftime('%Y-%m-%d')}**")
-    st.sidebar.write(f"**Mission Statement: {data.get('longBusinessSummary', 'N/A')}**")
+    st.sidebar.write(f"**Mission Statement: {data.get('longBusinessSummary', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')}**")
 
 
     # Create a Plotly bar chart
