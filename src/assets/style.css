@@ -44,3 +44,42 @@ h1, h2, h3 {
   line-height: 1.4;  /* Adjust line height for better readability */
   color: #555;  /* Slightly lighter color for less emphasis */
 }
+
+.metric-container {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.metric-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.metric-value {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+
+.plotly-chart {
+  background-color: rgba(0,0,0,0);
+}
+
+.plotly-chart .xgrid {
+  stroke: lightgrey;
+}
+
+.plotly-chart .ygrid {
+  stroke: none;
+}
+
+.plotly-chart .xaxis-title {
+  font-weight: bold;
+}
+
+.plotly-chart .title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
