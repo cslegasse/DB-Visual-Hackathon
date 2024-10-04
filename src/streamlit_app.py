@@ -3,18 +3,26 @@ import requests
 import plotly.graph_objects as go
 from datetime import datetime
 
-# ... existing code ...
-
-# Define the SVG as a string
-with open('src/assets/Deutsche_Bank_logo_without_wordmark.svg', 'r') as f:
-    svg_string = f.read()
+# Configure the page
+st.set_page_config(
+    page_title="Financial Data Dashboard",
+    page_icon="📊",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
 # Load custom CSS
 with open('src/assets/style.css', 'r') as f:
     custom_css = f'<style>{f.read()}</style>'
 
-# Apply custom CSS and add SVG as an image
+# Load SVG as a string
+with open('src/assets/Deutsche_Bank_logo_without_wordmark.svg', 'r') as f:
+    svg_string = f.read()
+
+# Apply custom CSS
 st.markdown(custom_css, unsafe_allow_html=True)
+
+# Add SVG as an image
 st.markdown(f'<div class="logo-container">{svg_string}</div>', unsafe_allow_html=True)
 
 st.title('Financial Data Dashboard')
@@ -47,8 +55,7 @@ if response.status_code == 200:
     st.sidebar.subheader('Company Information')
     st.sidebar.write(f"**Company Name: {data.get('longName', 'Lorem ipsum dolor.')}**")
     st.sidebar.write(f"**IPO Date: {datetime.utcfromtimestamp(data.get('firstTradeDateEpochUtc', 0)).strftime('%Y-%m-%d')}**")
-    st.sidebar.write(f"**Mission Statement: {data.get('longBusinessSummary', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')}**")
-
+    st.sidebar.markdown(f"<div class='mission-statement'>Mission Statement: {data.get('longBusinessSummary', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')}</div>", unsafe_allow_html=True)
 
     # Create a Plotly bar chart
     metrics = {

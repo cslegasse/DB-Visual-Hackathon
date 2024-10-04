@@ -12,3 +12,7 @@
 
 ## 5:15PM
 1. Still stuck......
+2. It works!!!
+
+## 6:41AM
+1. Clean up colors and format
