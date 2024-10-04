@@ -3,6 +3,20 @@ import requests
 import plotly.graph_objects as go
 from datetime import datetime
 
+# ... existing code ...
+
+# Define the SVG as a string
+with open('src/assets/Deutsche_Bank_logo_without_wordmark.svg', 'r') as f:
+    svg_string = f.read()
+
+# Load custom CSS
+with open('src/assets/style.css', 'r') as f:
+    custom_css = f'<style>{f.read()}</style>'
+
+# Apply custom CSS and add SVG as an image
+st.markdown(custom_css, unsafe_allow_html=True)
+st.markdown(f'<div class="logo-container">{svg_string}</div>', unsafe_allow_html=True)
+
 st.title('Financial Data Dashboard')
 
 st.sidebar.header('User Input')
