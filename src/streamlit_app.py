@@ -36,7 +36,8 @@ response = requests.get(api_url)
 
 if response.status_code == 200:
     data = response.json()
-    st.write(f"**Showing data for: {data['ticker']}**")
+    if data.get('error'):
+        st.error(f"Error: {data['error']}. Please enter a valid ticker symbol.")
 
     # Access values safely
     def get_value(key, index=0):
@@ -93,7 +94,7 @@ if response.status_code == 200:
     }    
 
     metrics_container = st.container()
-    metrics_container.subheader("Financial Metrics")
+    metrics_container.subheader(f"Financial Metrics for: {data['ticker']}")
 
     cols = st.columns(len(metrics))
     for col, (label, (value, change)) in zip(cols, metrics.items()):
@@ -133,5 +134,9 @@ if response.status_code == 200:
 
     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
+elif response.status_code == 500:
+    st.error(f"Error: Ticker symbol '{ticker}' not found. Please enter a valid ticker symbol.")
+
 else:
-    st.error('Error: Could not connect to the Flask API')
+    st.error(f'Error: Could not connect to the Flask API. Status code: {response.status_code}')
+
