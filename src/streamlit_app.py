@@ -59,9 +59,9 @@ if response.status_code == 200:
 
     st.sidebar.subheader('Company Information')
     st.sidebar.write(f"**Company Name: {data.get('longName', 'Lorem ipsum dolor.')}**")
-    st.sidebar.write(f"**IPO Date: {datetime.utcfromtimestamp(data.get('firstTradeDateEpochUtc', 0)).strftime('%Y-%m-%d')}**")
-    st.sidebar.markdown(f"<div class='mission-statement'>Mission Statement: {data.get('longBusinessSummary', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')}</div>", unsafe_allow_html=True)
-
+    st.sidebar.write(f"**IPO Date: {datetime.utcfromtimestamp(data.get('firstTradeDateEpochUtc', 0)).strftime('%B %d, %Y')}**")
+    st.sidebar.markdown("<div><strong>Mission Statement:</strong> <span class='mission-statement'>{}</span></div>".format(data.get('longBusinessSummary', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')), unsafe_allow_html=True)
+    
     # Create a Plotly bar chart
     metrics = {
         "Revenue Per Share": revenue_per_share,
@@ -70,7 +70,7 @@ if response.status_code == 200:
         "Tangible Book Value Per Share": tangible_book_value_per_share
     }    
 
-   # Get current and previous values
+    # Get current and previous values
     current_revenue_per_share = round(get_value('revenue_per_share'), 2)
     previous_revenue_per_share = round(get_value('revenue_per_share', index=1), 2)
     current_net_income_per_share = round(get_value('net_income_per_share'), 2)
@@ -107,23 +107,45 @@ if response.status_code == 200:
 
     # Prepare data for the bar chart
     metrics_names = list(metrics.keys())
-    values = [value for value, _ in metrics.values()]
+    current_values = [value for value, _ in metrics.values()]
+    previous_values = [get_value(key, index=1) for key in metrics.keys()]
 
-    # Create a horizontal bar chart
-    fig = go.Figure(data=[go.Bar(
+    # Create a horizontal stacked bar chart
+    fig = go.Figure(data=[
+    go.Bar(
         y=metrics_names,
-    x=values,
-    orientation='h',
-    text=[f"${value:,.2f}" for value in values],
-    textposition='outside',
-        marker_color='#0018A8'  # Deutsche Bank blue
-    )])
+        x=previous_values,
+        orientation='h',
+        name='Previous',
+        text=[f"${value:,.2f}" for value in previous_values],
+        textposition='inside',
+        insidetextanchor='start',
+        marker_color='#CCCCCC'  # Light gray for previous values
+    ),
+    go.Bar(
+        y=metrics_names,
+        x=current_values,
+        orientation='h',
+        name='Current',
+        text=[f"${value:,.2f}" for value in current_values],
+        textposition='outside',
+        marker_color='#0018A8'  # Deutsche Bank blue for current values
+        )
+    ])
 
     fig.update_layout(
     title=f'Financial Overview for {ticker}',
     xaxis_title='Per Share Values ($)',
     height=400,
-    margin=dict(l=0, r=0, t=40, b=0)
+    margin=dict(l=0, r=0, t=40, b=0),
+    barmode='stack',
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.02,
+        xanchor="right",
+        x=1
+    )
     )
 
     # Format x-axis labels
@@ -131,6 +153,9 @@ if response.status_code == 200:
 
     # Adjust bar width and add space between bars
     fig.update_traces(width=0.6)
+
+    # Ensure the x-axis starts at 0
+    fig.update_xaxes(range=[0, max(max(current_values), max(previous_values)) * 1.1])
 
     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
